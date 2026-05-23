@@ -5,32 +5,30 @@ import { useAuth } from '../context/AuthContext';
 /**
  * Componente de página de inicio de sesión
  * Permite a los usuarios autenticarse en el sistema
+ * HU-01: toggle mostrar/ocultar contraseña
  */
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  /**
-   * Maneja el envío del formulario de inicio de sesión
-   * @param {Event} e - Evento del formulario
-   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
     const result = await login(username, password);
-    
+
     if (result.success) {
       navigate('/');
     } else {
       setError(result.message || 'Credenciales inválidas');
     }
-    
+
     setLoading(false);
   };
 
@@ -68,15 +66,25 @@ const Login = () => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
               Contraseña
             </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
-              placeholder="Ingrese su contraseña"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full px-4 py-3 pr-24 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
+                placeholder="Ingrese su contraseña"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-sm font-medium text-primary-600 hover:text-primary-800 px-2 py-1"
+                aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+              >
+                {showPassword ? 'Ocultar' : 'Mostrar'}
+              </button>
+            </div>
           </div>
 
           <button
@@ -97,4 +105,3 @@ const Login = () => {
 };
 
 export default Login;
-
