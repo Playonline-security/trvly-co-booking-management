@@ -27,6 +27,7 @@ public class ClientController {
 
     /**
      * Obtiene todos los clientes, opcionalmente filtrados por búsqueda
+     * HU-03: normaliza espacios en el parámetro search
      * @param search Término de búsqueda opcional
      * @return Lista de clientes
      */
@@ -34,11 +35,15 @@ public class ClientController {
     @PreAuthorize("hasAuthority('client_management_r')")
     public ResponseEntity<List<ClientDto>> getAllClients(
             @RequestParam(required = false) String search) {
-        if (search != null && !search.trim().isEmpty()) {
+        if (search != null) {
+            search = search.trim();
+        }
+        if (search != null && !search.isEmpty()) {
             return ResponseEntity.ok(clientService.searchClients(search));
         }
         return ResponseEntity.ok(clientService.getAllClients());
     }
+
 
     /**
      * Obtiene un cliente por su ID
