@@ -39,6 +39,7 @@ public class SecurityConfig {
     /**
      * Bean para el codificador de contraseñas
      * Utiliza BCrypt para hashear las contraseñas
+     *
      * @return Codificador de contraseñas BCrypt
      */
     @Bean
@@ -49,6 +50,7 @@ public class SecurityConfig {
     /**
      * Bean para el proveedor de autenticación
      * Configura el servicio de detalles de usuario y el codificador de contraseñas
+     *
      * @return Proveedor de autenticación configurado
      */
     @Bean
@@ -61,6 +63,7 @@ public class SecurityConfig {
 
     /**
      * Bean para el gestor de autenticación
+     *
      * @param authConfig Configuración de autenticación
      * @return Gestor de autenticación
      * @throws Exception Si hay un error en la configuración
@@ -77,24 +80,25 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
-                // Los endpoints de paquetes se manejan con @PreAuthorize en el controlador
-                // para permitir acceso a asesores y supervisores
-                .requestMatchers("/api/admin/packages").hasAnyAuthority(
-                    "package_management", "reservation_management_r", "reservation_management_w")
-                .requestMatchers("/api/admin/packages/**").hasAnyAuthority(
-                    "package_management", "reservation_management_r", "reservation_management_w")
-                // Endpoints de administración de usuarios solo para administradores
-                .requestMatchers("/api/admin/users/**").hasAuthority("user_management")
-                .requestMatchers("/api/clients/**").hasAnyAuthority("client_management_r", "client_management_w")
-                .requestMatchers("/api/reservations/**").hasAnyAuthority("reservation_management_r", "reservation_management_w")
-                .anyRequest().authenticated()
-            )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/health").permitAll()
+                        // Los endpoints de paquetes se manejan con @PreAuthorize en el controlador
+                        // para permitir acceso a asesores y supervisores
+                        .requestMatchers("/api/admin/packages").hasAnyAuthority(
+                                "package_management", "reservation_management_r", "reservation_management_w")
+                        .requestMatchers("/api/admin/packages/**").hasAnyAuthority(
+                                "package_management", "reservation_management_r", "reservation_management_w")
+                        // Endpoints de administración de usuarios solo para administradores
+                        .requestMatchers("/api/admin/users/**").hasAuthority("user_management")
+                        .requestMatchers("/api/clients/**").hasAnyAuthority("client_management_r", "client_management_w")
+                        .requestMatchers("/api/reservations/**").hasAnyAuthority("reservation_management_r", "reservation_management_w")
+                        .anyRequest().authenticated()
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -102,6 +106,7 @@ public class SecurityConfig {
     /**
      * Bean para la configuración de CORS (Cross-Origin Resource Sharing)
      * Permite que el frontend en localhost:3000 acceda a los endpoints del backend
+     *
      * @return Fuente de configuración CORS
      */
     @Bean
