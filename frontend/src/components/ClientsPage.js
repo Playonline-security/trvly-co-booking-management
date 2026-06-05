@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import api from '../services/api';
+import { canDeleteRecords } from '../utils/permissions'; // [RF-02]
 
 /**
  * Componente para gestionar clientes
@@ -24,7 +25,7 @@ const ClientsPage = () => {
   });
 
   // Verificar si el usuario tiene permisos para eliminar clientes
-  const canDelete = user?.roles?.includes('ADMIN') || user?.roles?.includes('SUPERVISOR');
+  const canDelete = canDeleteRecords(user); // [RF-02]
 
   // Efecto para cargar clientes cuando cambia el término de búsqueda
   useEffect(() => {

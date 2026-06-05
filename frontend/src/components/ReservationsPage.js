@@ -2,33 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import api from '../services/api';
+import { getStatusLabel, getStatusColor } from '../utils/reservationStatus'; // [RF-01]
+import { canDeleteRecords, canEditReservations } from '../utils/permissions'; // [RF-02]
 
-/**
- * Función para traducir el estado de reserva al español
- */
-const getStatusLabel = (status) => {
-  const statusMap = {
-    'PENDING_PAYMENT': 'Pendiente de pago',
-    'PARTIAL_PAYMENT': 'Pago parcial',
-    'FULL_PAYMENT': 'Pago completo',
-    'CANCELLED': 'Cancelada'
-  };
-  return statusMap[status] || status;
-};
-
-/**
- * Función para obtener el color del estado
- */
-const getStatusColor = (status) => {
-  const colorMap = {
-    'FULL_PAYMENT': 'bg-green-100 text-green-800',
-    'PARTIAL_PAYMENT': 'bg-yellow-100 text-yellow-800',
-    'CANCELLED': 'bg-red-100 text-red-800',
-    'PENDING_PAYMENT': 'bg-gray-100 text-gray-800'
-  };
-  return colorMap[status] || 'bg-gray-100 text-gray-800';
-};
-
+// status helpers moved to utils/reservationStatus.js
 /**
  * Componente principal para gestionar reservas
  * Permite crear, editar, eliminar y buscar reservas
@@ -63,8 +40,8 @@ const ReservationsPage = () => {
   });
 
   // Verificar permisos del usuario
-  const canDelete = user?.roles?.includes('ADMIN') || user?.roles?.includes('SUPERVISOR');
-  const canEdit = user?.roles?.includes('ADMIN') || user?.roles?.includes('SUPERVISOR') || user?.roles?.includes('ADVISOR');
+  const canDelete = canDeleteRecords(user); // [RF-02]
+  const canEdit = canEditReservations(user); // [RF-02]
 
   // Efecto para cargar reservas y paquetes al montar el componente
   useEffect(() => {

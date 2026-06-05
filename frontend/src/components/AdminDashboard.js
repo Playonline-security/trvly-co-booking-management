@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
+import DashboardCard from './common/DashboardCard'; // [RF-03]
 
 /**
  * Componente del dashboard para administradores
- * Muestra un panel de control con acceso a todas las funcionalidades del sistema
  */
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -21,57 +20,39 @@ const AdminDashboard = () => {
           <p className="text-gray-600 mb-8">Panel de control - Administrador</p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Link
+            {/* [RF-03] */}
+            <DashboardCard
               to="/clients"
-              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-primary-500"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Gestión de clientes</h3>
-                  <p className="text-gray-600 text-sm mt-1">Administrar información de clientes</p>
-                </div>
-                <div className="text-primary-500 text-3xl">👥</div>
-              </div>
-            </Link>
-
-            <Link
+              title="Gestión de clientes"
+              description="Administrar información de clientes"
+              icon="👥"
+              borderColorClass="border-primary-500"
+              iconColorClass="text-primary-500"
+            />
+            <DashboardCard
               to="/reservations"
-              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-green-500"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Gestión de reservas</h3>
-                  <p className="text-gray-600 text-sm mt-1">Crear y gestionar reservas</p>
-                </div>
-                <div className="text-green-500 text-3xl">✈️</div>
-              </div>
-            </Link>
-
-            <Link
+              title="Gestión de reservas"
+              description="Crear y gestionar reservas"
+              icon="✈️"
+              borderColorClass="border-green-500"
+              iconColorClass="text-green-500"
+            />
+            <DashboardCard
               to="/packages"
-              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-purple-500"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Gestión de paquetes</h3>
-                  <p className="text-gray-600 text-sm mt-1">Administrar paquetes turísticos</p>
-                </div>
-                <div className="text-purple-500 text-3xl">🎒</div>
-              </div>
-            </Link>
-
-            <Link
+              title="Gestión de paquetes"
+              description="Administrar paquetes turísticos"
+              icon="🎒"
+              borderColorClass="border-purple-500"
+              iconColorClass="text-purple-500"
+            />
+            <DashboardCard
               to="/users"
-              className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border-l-4 border-red-500"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Gestión de usuarios</h3>
-                  <p className="text-gray-600 text-sm mt-1">Administrar usuarios del sistema</p>
-                </div>
-                <div className="text-red-500 text-3xl">👤</div>
-              </div>
-            </Link>
+              title="Gestión de usuarios"
+              description="Administrar usuarios del sistema"
+              icon="👤"
+              borderColorClass="border-red-500"
+              iconColorClass="text-red-500"
+            />
           </div>
         </div>
       </div>
@@ -80,4 +61,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
