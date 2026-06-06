@@ -1,6 +1,7 @@
 package co.trvly.controller;
 
 import co.trvly.dto.LoginRequest;
+import co.trvly.util.ApiResponseUtil; // RF-09
 import co.trvly.dto.LoginResponse;
 import co.trvly.service.AuthService;
 import jakarta.validation.Valid;
@@ -33,9 +34,7 @@ public class AuthController {
             LoginResponse response = authService.login(loginRequest);
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            return ApiResponseUtil.messageResponse(e.getMessage(), HttpStatus.UNAUTHORIZED); // RF-09
         }
     }
 }

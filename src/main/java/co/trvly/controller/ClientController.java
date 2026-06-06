@@ -1,6 +1,7 @@
 package co.trvly.controller;
 
 import co.trvly.dto.ClientDto;
+import co.trvly.util.ApiResponseUtil; // RF-07
 import co.trvly.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,19 @@ public class ClientController {
      * @param search Término de búsqueda opcional
      * @return Lista de clientes
      */
+
+    /**
+     * RF-08: valida si el parÃ¡metro search tiene contenido tras trim
+     */
+    private boolean hasSearchTerm(String search) {
+        return search != null && !search.trim().isEmpty();
+    }
     @GetMapping
     @PreAuthorize("hasAuthority('client_management_r')")
     public ResponseEntity<List<ClientDto>> getAllClients(
             @RequestParam(required = false) String search) {
-        if (search != null && !search.trim().isEmpty()) {
-            return ResponseEntity.ok(clientService.searchClients(search));
+        if (hasSearchTerm(search)) { // RF-08
+            return ResponseEntity.ok(clientService.searchClients(search.trim()));
         }
         return ResponseEntity.ok(clientService.getAllClients());
     }
@@ -45,6 +53,13 @@ public class ClientController {
      * @param id ID del cliente
      * @return Cliente encontrado
      */
+
+    /**
+     * RF-08: valida si el parÃ¡metro search tiene contenido tras trim
+     */
+    private boolean hasSearchTerm(String search) {
+        return search != null && !search.trim().isEmpty();
+    }
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('client_management_r')")
     public ResponseEntity<ClientDto> getClientById(@PathVariable Long id) {
@@ -63,9 +78,7 @@ public class ClientController {
             ClientDto created = clientService.createClient(clientDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (RuntimeException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            return ApiResponseUtil.messageResponse(e.getMessage(), HttpStatus.BAD_REQUEST); // RF-07
         }
     }
 
@@ -82,9 +95,7 @@ public class ClientController {
             ClientDto updated = clientService.updateClient(id, clientDto);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            return ApiResponseUtil.messageResponse(e.getMessage(), HttpStatus.BAD_REQUEST); // RF-07
         }
     }
 
@@ -100,9 +111,7 @@ public class ClientController {
             clientService.deleteClient(id);
             return ResponseEntity.noContent().build();
         } catch (RuntimeException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+            return ApiResponseUtil.messageResponse(e.getMessage(), HttpStatus.NOT_FOUND); // RF-07
         }
     }
 
@@ -111,6 +120,13 @@ public class ClientController {
      * @param ex Excepción de validación
      * @return Mapa con los errores de validación
      */
+
+    /**
+     * RF-07: delega en ApiResponseUtil para respuestas de error uniformes
+     */
+    private ResponseEntity<Map<String, String>> buildMessageResponse(String message, HttpStatus status) {
+        return ApiResponseUtil.messageResponse(message, status);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
