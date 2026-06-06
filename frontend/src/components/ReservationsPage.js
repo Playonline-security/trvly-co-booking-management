@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import api from '../services/api';
+import { INITIAL_RESERVATION_FORM } from '../constants/reservationForm'; // [RF-06]
 
 /**
  * Función para traducir el estado de reserva al español
@@ -55,12 +56,7 @@ const ReservationsPage = () => {
   const [newPassengerCount, setNewPassengerCount] = useState('');
   
   // Datos del formulario de nueva reserva
-  const [formData, setFormData] = useState({
-    clientId: '',
-    packageId: '',
-    passengerCount: '',
-    passengers: [],
-  });
+  const [formData, setFormData] = useState(INITIAL_RESERVATION_FORM); // [RF-06]
 
   // Verificar permisos del usuario
   const canDelete = user?.roles?.includes('ADMIN') || user?.roles?.includes('SUPERVISOR');
@@ -258,12 +254,7 @@ const ReservationsPage = () => {
    * Reinicia el formulario a sus valores iniciales
    */
   const resetForm = () => {
-    setFormData({
-      clientId: '',
-      packageId: '',
-      passengerCount: '',
-      passengers: [],
-    });
+    setFormData(INITIAL_RESERVATION_FORM); // [RF-06]
     setSelectedClient(null);
     setClientSearch('');
     setQuotation(null);

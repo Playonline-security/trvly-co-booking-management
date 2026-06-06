@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { INPUT_BASE_CLASS, BUTTON_PRIMARY_CLASS } from '../constants/formStyles'; // [RF-04]
 
 /**
  * Componente de página de inicio de sesión
@@ -59,7 +60,7 @@ const Login = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
+              className={INPUT_BASE_CLASS} // [RF-04]
               placeholder="Ingrese su usuario"
             />
           </div>
@@ -74,7 +75,7 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition"
+              className={INPUT_BASE_CLASS} // [RF-04]
               placeholder="Ingrese su contraseña"
             />
           </div>
@@ -82,7 +83,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+            className={BUTTON_PRIMARY_CLASS} // [RF-04]
           >
             {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
           </button>

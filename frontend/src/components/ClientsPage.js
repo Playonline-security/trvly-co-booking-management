@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 import api from '../services/api';
+import { INPUT_MODAL_CLASS } from '../constants/formStyles'; // [RF-04]
+import { getApiErrorMessage } from '../utils/apiErrors'; // [RF-05]
 
 /**
  * Componente para gestionar clientes
@@ -68,7 +70,7 @@ const ClientsPage = () => {
       fetchClients();
     } catch (error) {
       // Mostrar mensaje de error del servidor o mensaje genérico
-      alert(error.response?.data?.message || 'Error al guardar cliente');
+      alert(getApiErrorMessage(error, 'Error al guardar cliente')); // [RF-05]
     }
   };
 
@@ -99,7 +101,7 @@ const ClientsPage = () => {
       await api.delete(`/api/clients/${id}`);
       fetchClients();
     } catch (error) {
-      alert('Error al eliminar cliente');
+      alert(getApiErrorMessage(error, 'Error al eliminar cliente')); // [RF-05]
     }
   };
 
@@ -219,7 +221,7 @@ const ClientsPage = () => {
                         required
                         value={formData.firstNames}
                         onChange={(e) => setFormData({ ...formData, firstNames: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                        className={INPUT_MODAL_CLASS} // [RF-04]
                       />
                     </div>
                     <div>
@@ -231,7 +233,7 @@ const ClientsPage = () => {
                         required
                         value={formData.lastNames}
                         onChange={(e) => setFormData({ ...formData, lastNames: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                        className={INPUT_MODAL_CLASS} // [RF-04]
                       />
                     </div>
                   </div>
@@ -244,7 +246,7 @@ const ClientsPage = () => {
                       required
                       value={formData.documentId}
                       onChange={(e) => setFormData({ ...formData, documentId: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className={INPUT_MODAL_CLASS} // [RF-04]
                     />
                   </div>
                   <div>
@@ -256,7 +258,7 @@ const ClientsPage = () => {
                       required
                       value={formData.birthDate}
                       onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className={INPUT_MODAL_CLASS} // [RF-04]
                     />
                   </div>
                   <div>
@@ -268,7 +270,7 @@ const ClientsPage = () => {
                       required
                       value={formData.mobilePhone}
                       onChange={(e) => setFormData({ ...formData, mobilePhone: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className={INPUT_MODAL_CLASS} // [RF-04]
                     />
                   </div>
                   <div>
@@ -278,7 +280,7 @@ const ClientsPage = () => {
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                      className={INPUT_MODAL_CLASS} // [RF-04]
                     />
                   </div>
                   <div className="flex justify-end space-x-4 pt-4">
